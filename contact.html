@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    .card {
+      width: 240px;
+      padding: 20px; /* Fixed: added missing semicolon */
+      border: 2px solid navy;
+      margin: 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Applied the .card class -->
+  <form class="card">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" placeholder="Enter name" required>
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="Enter email" required>
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+</body>
+</html>
