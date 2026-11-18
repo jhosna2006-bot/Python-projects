@@ -1,0 +1,85 @@
+// ---------- 1. Menu data (edit names and prices here) ----------
+const menuItems = [
+  { name: "Chicken Biriyani",  desc: "Dum-cooked basmati with juicy chicken", price: 220, cat: "biriyani" },
+  { name: "Mutton Biriyani",   desc: "Slow-cooked tender mutton with rice",   price: 320, cat: "biriyani" },
+  { name: "Egg Biriyani",      desc: "Boiled eggs in spiced masala rice",     price: 170, cat: "biriyani" },
+  { name: "Chicken Kabab",     desc: "Marinated chicken grilled on skewers",  price: 200, cat: "starters" },
+  { name: "Chicken 65",        desc: "Crispy, spicy fried chicken",           price: 190, cat: "starters" },
+  { name: "Chicken Lollipop",  desc: "Fried chicken wings in red coating",    price: 230, cat: "starters" },
+  { name: "Pepper Chicken",    desc: "Dry-fried with crushed black pepper",   price: 210, cat: "starters" },
+  { name: "Fish Fry",          desc: "Marinated fish shallow-fried",          price: 260, cat: "starters" },
+  { name: "Raita",             desc: "Cool curd with onion and cucumber",     price: 40,  cat: "sides" },
+  { name: "Mirchi Ka Salan",   desc: "Tangy peanut and chilli gravy",         price: 60,  cat: "sides" }
+];
+
+// ---------- 2. Show the menu and filter it ----------
+const menuList = document.getElementById("menuList");
+const filterButtons = document.querySelectorAll(".filter");
+
+function showMenu(category) {
+  const items = category === "all"
+    ? menuItems
+    : menuItems.filter(item => item.cat === category);
+
+  menuList.innerHTML = items.map(item => `
+    <div class="menu-item">
+      <div><h3>${item.name}</h3><p>${item.desc}</p></div>
+      <span class="price">₹${item.price}</span>
+    </div>`).join("");
+}
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+    showMenu(button.dataset.filter);
+  });
+});
+
+showMenu("all");
+
+// ---------- 3. Contact form ----------
+// Paste your Formspree link here (see "Make the form send emails" below).
+// Leave it empty to run the form in demo mode.
+const FORM_URL = "";
+
+const form = document.getElementById("contactForm");
+const formMsg = document.getElementById("formMsg");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  // Check every field
+  const fields = [form.name, form.email, form.message];
+  let valid = true;
+  fields.forEach(field => {
+    const emailOk = field.type !== "email" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+    const ok = field.value.trim() !== "" && emailOk;
+    field.classList.toggle("invalid", !ok);
+    if (!ok) valid = false;
+  });
+
+  if (!valid) {
+    formMsg.className = "error";
+    formMsg.textContent = "Please fill in your name, a valid email and a message.";
+    return;
+  }
+
+  // Send the message
+  try {
+    if (FORM_URL) {
+      const response = await fetch(FORM_URL, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(form)
+      });
+      if (!response.ok) throw new Error("Send failed");
+    }
+    formMsg.className = "ok";
+    formMsg.textContent = "Thank you! Your message has been sent.";
+    form.reset();
+  } catch (error) {
+    formMsg.className = "error";
+    formMsg.textContent = "Sorry, the message could not be sent. Please call us instead.";
+  }
+});
